@@ -7,7 +7,7 @@ st.set_page_config(page_title="Visualizador CNED", layout="wide")
 st.markdown(
     """
     <div style="text-align: right;">
-        <img src="https://cned.cl/wp-content/uploads/2023/10/cned_s_fondo.png" width="300">
+        <img src="https://cned.cl/wp-content/uploads/2023/10/cned_s_fondo.png" width="100">
     </div>
     """,
     unsafe_allow_html=True
