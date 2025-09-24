@@ -2,10 +2,11 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-st.set_page_config(page_title="Dashboard público", layout="wide")
+st.set_page_config(page_title="Visualizador CNED", layout="wide")
 
-st.title("📊 Dashboard público con Streamlit")
-st.markdown("Ejemplo simple desplegado desde GitHub")
+st.title("**VISUALIZADOR DE DATOS INSTITUCIONALES**")
+st.subtitle("Última actualización: 30 de septiembre de 2025")
+st.markdown("Contacto: Fabián Ramírez (framirez@cned.cl)")
 
 # Datos de ejemplo
 df = pd.DataFrame({
