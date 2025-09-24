@@ -5,7 +5,7 @@ import numpy as np
 st.set_page_config(page_title="Visualizador CNED", layout="wide")
 
 st.title("**VISUALIZADOR DE DATOS INSTITUCIONALES**")
-st.subtitle("Última actualización: 30 de septiembre de 2025")
+st.subheader("Última actualización: 30 de septiembre de 2025")
 st.markdown("Contacto: Fabián Ramírez (framirez@cned.cl)")
 
 # Datos de ejemplo
