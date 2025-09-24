@@ -4,15 +4,17 @@ import numpy as np
 
 st.set_page_config(page_title="Visualizador CNED", layout="wide")
 
-col1, col2 = st.columns([1,4])
+st.markdown(
+    """
+    <div style="text-align: right;">
+        <img src="https://cned.cl/wp-content/uploads/2023/10/cned_s_fondo.png" width="600">
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
-with col1:
-    st.title("VISUALIZADOR DE DATOS INSTITUCIONALES")
-    st.subheader("Última actualización: 30 de septiembre de 2025")
-
-with col2:
-    st.image("https://cned.cl/wp-content/uploads/2023/10/cned_s_fondo.png", width=100)
-
+st.title("**VISUALIZADOR DE DATOS INSTITUCIONALES**")
+st.subheader("Última actualización: 30 de septiembre de 2025")
 st.markdown("Contacto: Fabián Ramírez (framirez@cned.cl)")
 
 # Datos de ejemplo
