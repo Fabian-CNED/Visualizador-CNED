@@ -22,41 +22,14 @@ st.title("**VISUALIZADOR DE DATOS INSTITUCIONALES**")
 st.subheader("Última actualización: 30 de septiembre de 2025")
 st.markdown("Contacto: Fabián Ramírez (framirez@cned.cl)")
 
-# Función alternativa para cargar el CSV
+## CARGA LA BASE DE DATOS DE INFORMACIÓN GENERAL
 @st.cache_data
-def load_data_robust():
-    try:
-        # Leer el archivo como texto primero para diagnosticar
-        with open('Listado IES.csv', 'r', encoding='utf-8') as f:
-            lines = f.readlines()
-        
-        st.write(f"El archivo tiene {len(lines)} líneas")
-        st.write("Primeras 3 líneas del archivo:")
-        for i, line in enumerate(lines[:3]):
-            st.write(f"Línea {i+1}: {line[:100]}...")  # Mostrar primeros 100 caracteres
-        
-        # Intentar diferentes separadores
-        separators = [',', ';', '\t', '|']
-        
-        for sep in separators:
-            try:
-                data = pd.read_csv('Listado IES.csv', sep=sep, encoding='utf-8')
-                if len(data.columns) > 1:  # Si encontró múltiples columnas
-                    st.success(f"Archivo cargado con separador: '{sep}'")
-                    return data
-            except:
-                continue
-        
-        # Si llegamos aquí, intentar con engine python
-        data = pd.read_csv('Listado IES.csv', engine='python', encoding='utf-8')
-        return data
-        
-    except Exception as e:
-        st.error(f"Error al cargar archivo: {str(e)}")
-        return pd.DataFrame()
+def load_data():
+    # Carga directa con el separador conocido
+    data = pd.read_csv('Listado IES.csv', sep=';', encoding='utf-8')
+    return data
 
-# ¡ESTA LÍNEA FALTABA! - Cargar los datos
-data = load_data_robust()
+data = load_data()
 
 # Verificar si se cargaron datos
 if data.empty:
@@ -65,8 +38,6 @@ if data.empty:
 
 # Mostrar información básica del dataset
 st.write(f"Dataset cargado: {len(data)} filas, {len(data.columns)} columnas")
-st.write("Primeras filas del dataset:")
-st.dataframe(data.head())
 
 # Verificar que existe la columna 'ins_nom'
 if 'ins_nom' not in data.columns:
@@ -76,11 +47,9 @@ if 'ins_nom' not in data.columns:
 
 # Obtener la lista de instituciones únicas a partir de la columna 'ins_nom'
 instituciones = data['ins_nom'].unique().tolist()
-
-# Ordenar alfabéticamente
 instituciones.sort()
 
-# Sidebar para mejor organización
+# Sidebar para selección de institución
 with st.sidebar:
     st.header("🏫 Selección de Institución")
     
@@ -99,7 +68,7 @@ with st.sidebar:
         else:
             st.warning("No se encontraron instituciones con ese criterio.")
             institucion_seleccionada = st.selectbox(
-                "Institución:",
+                "Todas las instituciones:",
                 instituciones,
                 key="selector_institucion"
             )
@@ -151,5 +120,3 @@ if not datos_institucion.empty:
         
         for director in directores:
             st.write(f"**{director['nombre']}** - {director['rol']} ({director['profesion']})")
-else:
-    st.warning("No se encontraron datos para la institución seleccionada")
