@@ -73,17 +73,13 @@ if not datos_institucion.empty:
     st.success(f"✅ Institución seleccionada: **{institucion_seleccionada}**")
     
     # Mostrar información básica
-    col1, col2, col3 = st.columns(3)
+    col1, col2 = st.columns(2)
     
     with col1:
-        if 'ins_cod' in datos_institucion.columns:
-            st.metric("Código Institución", datos_institucion['ins_cod'].iloc[0])
-    
-    with col2:
         if 'rec_nom' in datos_institucion.columns:
             st.metric("Rector/a", datos_institucion['rec_nom'].iloc[0])
     
-    with col3:
+    with col2:
         if 'pro_cned' in datos_institucion.columns:
             st.metric("Proceso CNED", datos_institucion['pro_cned'].iloc[0])
     
