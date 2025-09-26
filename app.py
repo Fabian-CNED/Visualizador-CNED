@@ -20,25 +20,27 @@ st.title("**VISUALIZADOR DE DATOS INSTITUCIONALES**")
 st.subheader("Última actualización: 30 de septiembre de 2025")
 st.markdown("Contacto: Fabián Ramírez (framirez@cned.cl)")
 
-# Define listado de instituciones
-instituciones_df = pd.DataFrame({
-    'id': range(1, 201),
-    'nombre': [f"Institución {i}" for i in range(1, 201)]
-})
+# Sidebar para mejor organización
+with st.sidebar:
+    st.header("🏫 Selección de Institución")
+    
+    institucion_seleccionada = st.selectbox(
+        "Institución:",
+        instituciones_df['nombre'].tolist(),
+        key="selector_institucion"
+    )
+    
+    # También puedes agregar un buscador
+    buscar = st.text_input("Buscar institución:", "")
 
-# Crear el selectbox
-institucion_seleccionada = st.selectbox(
-    "Selecciona una institución:",
-    options=instituciones_df['nombre'].tolist(),
-    index=0,
-    help="Elige una institución de educación superior para ver sus datos"
-)
-
-# Obtener el ID de la institución seleccionada
-institucion_id = instituciones_df[instituciones_df['nombre'] == institucion_seleccionada]['id'].iloc[0]
-
-st.write(f"ID de la institución seleccionada: {institucion_id}")
-
+# Filtrar opciones si se usa el buscador
+if buscar:
+    opciones_filtradas = [inst for inst in instituciones_df['nombre'] if buscar.lower() in inst.lower()]
+    if opciones_filtradas:
+        institucion_seleccionada = st.selectbox(
+            "Resultados de búsqueda:",
+            opciones_filtradas
+        )
 # Datos de ejemplo
 df = pd.DataFrame({
     "x": np.arange(0, 20),
