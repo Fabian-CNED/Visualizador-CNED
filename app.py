@@ -20,6 +20,12 @@ st.title("**VISUALIZADOR DE DATOS INSTITUCIONALES**")
 st.subheader("Última actualización: 30 de septiembre de 2025")
 st.markdown("Contacto: Fabián Ramírez (framirez@cned.cl)")
 
+# Supongamos que tienes un DataFrame con las instituciones
+instituciones_df = pd.DataFrame({
+    'id': range(1, 201),
+    'nombre': [f"Institución {i}" for i in range(1, 201)]
+})
+
 # Sidebar para mejor organización
 with st.sidebar:
     st.header("🏫 Selección de Institución")
