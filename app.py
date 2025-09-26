@@ -20,11 +20,29 @@ st.title("**VISUALIZADOR DE DATOS INSTITUCIONALES**")
 st.subheader("Última actualización: 30 de septiembre de 2025")
 st.markdown("Contacto: Fabián Ramírez (framirez@cned.cl)")
 
-# Supongamos que tienes un DataFrame con las instituciones
-instituciones_df = pd.DataFrame({
-    'id': range(1, 201),
-    'nombre': [f"Institución {i}" for i in range(1, 201)]
-})
+## CARGA LA BASE DE DATOS DE INFORMACIÓN GENERAL
+@st.cache_data
+def load_data():
+    data = pd.read_csv('C:\Users\fabian.ramirez\OneDrive - CONSEJO NACIONAL DE EDUCACION\CNED\Trabajando\6. Visualizador CNED\Visualizador\Listado IES.csv')
+    return data
+
+data = load_data()
+
+# Obtener la lista de instituciones únicas a partir de la columna 'ins_nom'
+instituciones = data['ins_nom'].unique().tolist()
+
+# Ordenar alfabéticamente (opcional)
+instituciones.sort()
+
+# Crear el selectbox en Streamlit
+institucion_seleccionada = st.selectbox(
+    "Selecciona una institución:",
+    instituciones
+)
+
+# Filtrar los datos para la institución seleccionada
+datos_institucion = data[data['ins_nom'] == institucion_seleccionada]
+
 
 # Sidebar para mejor organización
 with st.sidebar:
