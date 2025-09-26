@@ -22,43 +22,40 @@ st.title("**VISUALIZADOR DE DATOS INSTITUCIONALES**")
 st.subheader("Última actualización: 30 de septiembre de 2025")
 st.markdown("Contacto: Fabián Ramírez (framirez@cned.cl)")
 
-## CARGA LA BASE DE DATOS DE INFORMACIÓN GENERAL
+# Función alternativa para cargar el CSV
 @st.cache_data
-def load_data():
+def load_data_robust():
     try:
-        # Intentar diferentes configuraciones para el CSV
-        # Opción 1: UTF-8
-        try:
-            data = pd.read_csv('Listado IES.csv', encoding='utf-8')
-            st.success("Archivo cargado con encoding UTF-8")
-            return data
-        except:
-            # Opción 2: Latin-1 (común en archivos de Windows)
+        # Leer el archivo como texto primero para diagnosticar
+        with open('Listado IES.csv', 'r', encoding='utf-8') as f:
+            lines = f.readlines()
+        
+        st.write(f"El archivo tiene {len(lines)} líneas")
+        st.write("Primeras 3 líneas del archivo:")
+        for i, line in enumerate(lines[:3]):
+            st.write(f"Línea {i+1}: {line[:100]}...")  # Mostrar primeros 100 caracteres
+        
+        # Intentar diferentes separadores
+        separators = [',', ';', '\t', '|']
+        
+        for sep in separators:
             try:
-                data = pd.read_csv('Listado IES.csv', encoding='latin-1')
-                st.success("Archivo cargado con encoding Latin-1")
-                return data
-            except:
-                # Opción 3: Con parámetros adicionales
-                try:
-                    data = pd.read_csv(
-                        'Listado IES.csv', 
-                        encoding='latin-1',
-                        delimiter=',',
-                        quotechar='"',
-                        skipinitialspace=True,
-                        engine='python',
-                        on_bad_lines='skip'  # Saltar líneas problemáticas
-                    )
-                    st.success("Archivo cargado con parámetros extendidos")
+                data = pd.read_csv('Listado IES.csv', sep=sep, encoding='utf-8')
+                if len(data.columns) > 1:  # Si encontró múltiples columnas
+                    st.success(f"Archivo cargado con separador: '{sep}'")
                     return data
-                except Exception as e:
-                    st.error(f"No se pudo cargar el archivo: {str(e)}")
-                    return pd.DataFrame()
+            except:
+                continue
+        
+        # Si llegamos aquí, intentar con engine python
+        data = pd.read_csv('Listado IES.csv', engine='python', encoding='utf-8')
+        return data
+        
     except Exception as e:
-        st.error(f"Error inesperado: {str(e)}")
+        st.error(f"Error al cargar archivo: {str(e)}")
         return pd.DataFrame()
 
+# Reemplaza la función load_data por esta
 data = load_data()
 
 # Verificar si se cargaron datos
