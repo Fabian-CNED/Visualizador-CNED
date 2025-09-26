@@ -31,20 +31,6 @@ def load_data():
 
 data = load_data()
 
-# Verificar si se cargaron datos
-if data.empty:
-    st.error("No se pudieron cargar los datos. Verifica el archivo CSV.")
-    st.stop()
-
-# Mostrar información básica del dataset
-st.write(f"Dataset cargado: {len(data)} filas, {len(data.columns)} columnas")
-
-# Verificar que existe la columna 'ins_nom'
-if 'ins_nom' not in data.columns:
-    st.error("La columna 'ins_nom' no existe en el dataset. Columnas disponibles:")
-    st.write(data.columns.tolist())
-    st.stop()
-
 # Obtener la lista de instituciones únicas a partir de la columna 'ins_nom'
 instituciones = data['ins_nom'].unique().tolist()
 instituciones.sort()
