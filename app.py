@@ -43,7 +43,6 @@ institucion_seleccionada = st.selectbox(
 # Filtrar los datos para la institución seleccionada
 datos_institucion = data[data['ins_nom'] == institucion_seleccionada]
 
-
 # Sidebar para mejor organización
 with st.sidebar:
     st.header("🏫 Selección de Institución")
@@ -65,16 +64,4 @@ if buscar:
             "Resultados de búsqueda:",
             opciones_filtradas
         )
-# Datos de ejemplo
-df = pd.DataFrame({
-    "x": np.arange(0, 20),
-    "serie A": np.random.randn(20).cumsum(),
-    "serie B": np.random.randn(20).cumsum()
-})
 
-# Gráfico
-st.line_chart(df.set_index("x"))
-
-# Tabla
-st.subheader("Datos")
-st.dataframe(df)
