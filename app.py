@@ -55,9 +55,6 @@ def load_data_robust():
         st.error(f"Error al cargar archivo: {str(e)}")
         return pd.DataFrame()
 
-# Reemplaza la función load_data por esta
-data = load_data()
-
 # Verificar si se cargaron datos
 if data.empty:
     st.error("No se pudieron cargar los datos. Verifica el archivo CSV.")
