@@ -23,7 +23,7 @@ st.markdown("Contacto: Fabián Ramírez (framirez@cned.cl)")
 ## CARGA LA BASE DE DATOS DE INFORMACIÓN GENERAL
 @st.cache_data
 def load_data():
-    data = pd.read_csv('C:\Users\fabian.ramirez\OneDrive - CONSEJO NACIONAL DE EDUCACION\CNED\Trabajando\6. Visualizador CNED\Visualizador\Listado IES.csv')
+    data = pd.read_csv('Listado IES.csv')
     return data
 
 data = load_data()
