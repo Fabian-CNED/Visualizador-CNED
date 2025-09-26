@@ -38,9 +38,6 @@ institucion_seleccionada = st.selectbox(
 institucion_id = instituciones_df[instituciones_df['nombre'] == institucion_seleccionada]['id'].iloc[0]
 
 st.write(f"ID de la institución seleccionada: {institucion_id}")
-Con datos cargados desde archivo:
-
-
 
 # Datos de ejemplo
 df = pd.DataFrame({
