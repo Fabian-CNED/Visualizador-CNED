@@ -20,7 +20,6 @@ st.markdown(
 # Presentación del visualizador
 st.title("**VISUALIZADOR DE DATOS INSTITUCIONALES**")
 st.subheader("Última actualización: 30 de septiembre de 2025")
-st.markdown("Contacto: Fabián Ramírez (framirez@cned.cl)")
 
 ## CARGA LA BASE DE DATOS DE INFORMACIÓN GENERAL
 @st.cache_data
