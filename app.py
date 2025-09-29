@@ -21,35 +21,19 @@ st.markdown(
 st.title("**VISUALIZADOR DE DATOS INSTITUCIONALES**")
 st.subheader("Última actualización: 30 de septiembre de 2025")
 
-# Cargar datos desde CSV (si los tienes en un archivo)
+# Cargar datos desde CSV
 @st.cache_data
 def cargar_instituciones():
     # Aquí cargarías tu archivo con los 200 nombres
-    return pd.read_csv('instituciones.csv')
+    return pd.read_csv('Listado IES.csv')
 
 instituciones_df = cargar_instituciones()
 
-# Sidebar para mejor organización
-with st.sidebar:
-    st.header("🏫 Selección de Institución")
-    
-    institucion_seleccionada = st.selectbox(
+institucion_seleccionada = st.selectbox(
         "Institución:",
         instituciones_df['nombre'].tolist(),
         key="selector_institucion"
     )
-    
-    # También puedes agregar un buscador
-    buscar = st.text_input("Buscar institución:", "")
-
-# Filtrar opciones si se usa el buscador
-if buscar:
-    opciones_filtradas = [inst for inst in instituciones_df['nombre'] if buscar.lower() in inst.lower()]
-    if opciones_filtradas:
-        institucion_seleccionada = st.selectbox(
-            "Resultados de búsqueda:",
-            opciones_filtradas
-        )
 
 # Filtrar los datos para la institución seleccionada
 datos_institucion = data[data['ins_nom'] == institucion_seleccionada]
