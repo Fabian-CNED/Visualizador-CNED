@@ -21,47 +21,34 @@ st.markdown(
 st.title("**VISUALIZADOR DE DATOS INSTITUCIONALES**")
 st.subheader("Última actualización: 30 de septiembre de 2025")
 
-## CARGA LA BASE DE DATOS DE INFORMACIÓN GENERAL
+# Cargar datos desde CSV (si los tienes en un archivo)
 @st.cache_data
-def load_data():
-    # Carga directa con el separador conocido
-    data = pd.read_csv('Listado IES.csv', sep=';', encoding='utf-8')
-    return data
+def cargar_instituciones():
+    # Aquí cargarías tu archivo con los 200 nombres
+    return pd.read_csv('instituciones.csv')
 
-data = load_data()
+instituciones_df = cargar_instituciones()
 
-# Obtener la lista de instituciones únicas a partir de la columna 'ins_nom'
-instituciones = data['ins_nom'].unique().tolist()
-instituciones.sort()
-
-# Sidebar para selección de institución
+# Sidebar para mejor organización
 with st.sidebar:
     st.header("🏫 Selección de Institución")
     
-    # Buscador
-    buscar = st.text_input("Buscar institución:", "")
+    institucion_seleccionada = st.selectbox(
+        "Institución:",
+        instituciones_df['nombre'].tolist(),
+        key="selector_institucion"
+    )
     
-    # Filtrar opciones si se usa el buscador
-    if buscar:
-        opciones_filtradas = [inst for inst in instituciones if buscar.lower() in inst.lower()]
-        if opciones_filtradas:
-            institucion_seleccionada = st.selectbox(
-                "Resultados de búsqueda:",
-                opciones_filtradas,
-                key="selector_busqueda"
-            )
-        else:
-            st.warning("No se encontraron instituciones con ese criterio.")
-            institucion_seleccionada = st.selectbox(
-                "Todas las instituciones:",
-                instituciones,
-                key="selector_institucion"
-            )
-    else:
+    # También puedes agregar un buscador
+    buscar = st.text_input("Buscar institución:", "")
+
+# Filtrar opciones si se usa el buscador
+if buscar:
+    opciones_filtradas = [inst for inst in instituciones_df['nombre'] if buscar.lower() in inst.lower()]
+    if opciones_filtradas:
         institucion_seleccionada = st.selectbox(
-            "Institución:",
-            instituciones,
-            key="selector_institucion"
+            "Resultados de búsqueda:",
+            opciones_filtradas
         )
 
 # Filtrar los datos para la institución seleccionada
@@ -69,7 +56,7 @@ datos_institucion = data[data['ins_nom'] == institucion_seleccionada]
 
 # Mostrar información de la institución seleccionada
 if not datos_institucion.empty:
-    st.success(f"✅ Institución seleccionada: **{institucion_seleccionada}**")
+    st.success(f"**{institucion_seleccionada}**")
     
     # Mostrar información básica
     col1, col2 = st.columns(2)
