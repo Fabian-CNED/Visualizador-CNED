@@ -22,20 +22,11 @@ st.title("**VISUALIZADOR DE DATOS INSTITUCIONALES**")
 st.subheader("Última actualización: 30 de septiembre de 2025")
 
 # Cargar datos desde CSV
-@st.cache_data
-def cargar_instituciones():
-    # Especificar el separador y encoding
-    return pd.read_csv('Listado IES.csv', sep=';', encoding='utf-8')
-
-instituciones_df = cargar_instituciones()
-
-# Verificar que la columna 'ins_nom' existe
-if 'ins_nom' not in instituciones_df.columns:
-    st.error("La columna 'ins_nom' no se encuentra en el dataset.")
-    st.stop()
+instituciones_bd = pd.read_csv('Listado IES.csv', sep=';', encoding='utf-8')
 
 # Obtener la lista de instituciones únicas a partir de la columna 'ins_nom'
-instituciones = instituciones_df['ins_nom'].unique().tolist()
+instituciones = instituciones_bd['ins_nom'].unique().tolist()
+instituciones.sort()
 
 institucion_seleccionada = st.selectbox(
     "Institución:",
@@ -44,10 +35,9 @@ institucion_seleccionada = st.selectbox(
 )
 
 # Filtrar los datos para la institución seleccionada
-datos_institucion = instituciones_df[instituciones_df['ins_nom'] == institucion_seleccionada]
+datos_institucion = instituciones_bd[instituciones_bd['ins_nom'] == institucion_seleccionada]
 
 # Mostrar información de la institución seleccionada
-if not datos_institucion.empty:
     st.success(f"**{institucion_seleccionada}**")
     
     # Mostrar información básica
@@ -63,7 +53,7 @@ if not datos_institucion.empty:
     
     # Mostrar información del directorio si existe
     if any(col.startswith('dir') for col in datos_institucion.columns):
-        st.subheader("👥 Directorio")
+        st.subheader("Directorio")
         directores = []
         for i in range(1, 10):  # Para dir1 a dir9
             nom_col = f'dir{i}_nom'
