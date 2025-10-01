@@ -24,19 +24,27 @@ st.subheader("Última actualización: 30 de septiembre de 2025")
 # Cargar datos desde CSV
 @st.cache_data
 def cargar_instituciones():
-    # Aquí cargarías tu archivo con los 200 nombres
-    return pd.read_csv('Listado IES.csv')
+    # Especificar el separador y encoding
+    return pd.read_csv('Listado IES.csv', sep=';', encoding='utf-8')
 
 instituciones_df = cargar_instituciones()
 
+# Verificar que la columna 'ins_nom' existe
+if 'ins_nom' not in instituciones_df.columns:
+    st.error("La columna 'ins_nom' no se encuentra en el dataset.")
+    st.stop()
+
+# Obtener la lista de instituciones únicas a partir de la columna 'ins_nom'
+instituciones = instituciones_df['ins_nom'].unique().tolist()
+
 institucion_seleccionada = st.selectbox(
-        "Institución:",
-        instituciones_df['nombre'].tolist(),
-        key="selector_institucion"
-    )
+    "Institución:",
+    instituciones,
+    key="selector_institucion"
+)
 
 # Filtrar los datos para la institución seleccionada
-datos_institucion = data[data['ins_nom'] == institucion_seleccionada]
+datos_institucion = instituciones_df[instituciones_df['ins_nom'] == institucion_seleccionada]
 
 # Mostrar información de la institución seleccionada
 if not datos_institucion.empty:
