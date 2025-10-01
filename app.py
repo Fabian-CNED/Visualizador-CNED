@@ -36,9 +36,6 @@ institucion_seleccionada = st.selectbox(
 
 # Filtrar los datos para la institución seleccionada
 datos_institucion = instituciones_bd[instituciones_bd['ins_nom'] == institucion_seleccionada]
-
-# Mostrar información de la institución seleccionada
-    st.success(f"**{institucion_seleccionada}**")
     
     # Mostrar información básica
     col1, col2 = st.columns(2)
