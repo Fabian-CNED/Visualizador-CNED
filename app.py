@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 
 # Configuración de la página - ocultar barra lateral
 st.set_page_config(
@@ -21,6 +22,15 @@ hide_sidebar_style = """
             max-width: 100%;
             padding-left: 1rem;
             padding-right: 1rem;
+        }
+        
+        /* Estilos para la tabla */
+        .dataframe table {
+            width: 100%;
+        }
+        .dataframe th, .dataframe td {
+            text-align: center;
+            white-space: nowrap;
         }
     </style>
 """
@@ -153,17 +163,43 @@ df_filtered['Desagregación'] = df_filtered.apply(
     axis=1
 )
 
+# Función para formatear números con separador de miles y manejar valores nulos
+def format_number(value):
+    if pd.isna(value) or value == "" or value is None:
+        return "-"
+    try:
+        # Convertir a entero y formatear con separador de miles
+        return f"{int(value):,}".replace(",", ".")
+    except (ValueError, TypeError):
+        return "-"
+
+# Aplicar formato a las columnas de años
+for year_col in ['vacantes2021', 'vacantes2022', 'vacantes2023', 'vacantes2024', 'vacantes2025']:
+    df_filtered[year_col] = df_filtered[year_col].apply(format_number)
+
 # Sección DIMENSIÓN 1
 st.divider()
 st.header("DIMENSIÓN 1: DOCENCIA Y RESULTADOS DEL PROCESO DE FORMACIÓN")
 st.subheader("Criterio 1: Oferta formativa")
 st.write("**Indicador 01: Número de programas vigentes.**")
 
-# Crear tabla para mostrar
+# Crear tabla para mostrar con categorías agrupadas
 table_data = []
-for _, row in df_filtered.iterrows():
+current_category = None
+
+# Ordenar por categoría y desagregación para agrupar correctamente
+df_sorted = df_filtered.sort_values(['categoria', 'desagregacion'])
+
+for _, row in df_sorted.iterrows():
+    # Solo mostrar el nombre de la categoría en la primera fila de cada grupo
+    if row['Categoría'] != current_category:
+        current_category = row['Categoría']
+        show_category = current_category
+    else:
+        show_category = ""  # Vacío para filas subsiguientes de la misma categoría
+    
     table_data.append({
-        'Categoría': row['Categoría'],
+        'Categoría': show_category,
         'Desagregación': row['Desagregación'],
         '2021': row['vacantes2021'],
         '2022': row['vacantes2022'], 
@@ -175,7 +211,22 @@ for _, row in df_filtered.iterrows():
 # Mostrar tabla
 if table_data:
     df_display = pd.DataFrame(table_data)
-    st.dataframe(df_display, use_container_width=True, hide_index=True)
+    
+    # Mostrar la tabla con formato mejorado
+    st.dataframe(
+        df_display,
+        use_container_width=True,
+        hide_index=True,
+        column_config={
+            'Categoría': st.column_config.TextColumn(width='medium'),
+            'Desagregación': st.column_config.TextColumn(width='large'),
+            '2021': st.column_config.TextColumn(width='small'),
+            '2022': st.column_config.TextColumn(width='small'),
+            '2023': st.column_config.TextColumn(width='small'),
+            '2024': st.column_config.TextColumn(width='small'),
+            '2025': st.column_config.TextColumn(width='small')
+        }
+    )
 else:
     st.warning("No se encontraron datos para la institución seleccionada.")
 
