@@ -166,7 +166,7 @@ def procesar_tabla(nombre_archivo, cod_inst):
     )
     
     # Aplicar formato a las columnas de años
-    year_columns = [col for col in df_filtered.columns if col.startswith('vacantes')]
+    year_columns = [col for col in df_filtered.columns if col.startswith('programas')]
     for year_col in year_columns:
         df_filtered[year_col] = df_filtered[year_col].apply(format_number)
     
@@ -189,11 +189,11 @@ if df_tab1 is not None:
         table_data_01.append({
             'Categoría': row['Categoría'],
             'Desagregación': row['Desagregación'],
-            '2021': row['vacantes2021'],
-            '2022': row['vacantes2022'], 
-            '2023': row['vacantes2023'],
-            '2024': row['vacantes2024'],
-            '2025': row['vacantes2025']
+            '2021': row['programas2021'],
+            '2022': row['programas2022'], 
+            '2023': row['programas2023'],
+            '2024': row['programas2024'],
+            '2025': row['programas2025']
         })
 
     # Mostrar tabla
@@ -215,11 +215,11 @@ if df_tab3 is not None:
         table_data_03.append({
             'Categoría': row['Categoría'],
             'Desagregación': row['Desagregación'],
-            '2021': row['vacantes2021'],
-            '2022': row['vacantes2022'], 
-            '2023': row['vacantes2023'],
-            '2024': row['vacantes2024'],
-            '2025': row['vacantes2025']
+            '2021': row['programas2021'],
+            '2022': row['programas2022'], 
+            '2023': row['programas2023'],
+            '2024': row['programas2024'],
+            '2025': row['programas2025']
         })
 
     # Mostrar tabla
