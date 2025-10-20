@@ -10,7 +10,7 @@ st.caption("Última actualización: 20 de octubre de 2025")
 
 # Cargar datos desde el archivo CSV
 try:
-    df = pd.read_csv("tab0.csv")
+    df = pd.read_csv("tab0.csv", sep=';')
     
     # Verificar que las columnas necesarias existan en el DataFrame
     required_columns = ['cat_periodo', 'tipo_inst_3', 'cod_inst', 'nomb_inst', 'rector_inst', 'estado']
