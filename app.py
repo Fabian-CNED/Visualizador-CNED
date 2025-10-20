@@ -91,3 +91,93 @@ with col2:
 
 # Mostrar código institucional (oculto al usuario pero disponible para uso interno)
 st.session_state['selected_institution_code'] = cod_inst
+
+# Cargar datos para la DIMENSIÓN 1
+try:
+    df_tab1 = pd.read_csv("tab1.csv", sep=';', encoding='utf-8')
+except FileNotFoundError:
+    st.error("No se encontró el archivo 'tab1.csv'. Asegúrate de que esté en el mismo directorio.")
+    st.stop()
+except Exception as e:
+    st.error(f"Error al cargar el archivo tab1.csv: {e}")
+    # Intentar con encoding alternativo
+    try:
+        df_tab1 = pd.read_csv("tab1.csv", sep=';', encoding='latin-1')
+    except Exception as e2:
+        st.error(f"Error también con encoding alternativo: {e2}")
+        st.stop()
+
+# Filtrar datos por institución seleccionada
+df_filtered = df_tab1[df_tab1['cod_inst'] == cod_inst]
+
+# Mapeo de categorías y desagregaciones
+categoria_map = {
+    0: "TOTAL",
+    1: "Nivel de carrera",
+    2: "Jornada", 
+    3: "Modalidad"
+}
+
+desagregacion_map = {
+    0: {0: "TOTAL"},
+    1: {
+        1: "Bachillerato o similar",
+        2: "TNS",
+        3: "Título Profesional", 
+        4: "Licenciatura",
+        5: "Título y Licenciatura",
+        6: "Especialidad Médica",
+        7: "Diplomado",
+        8: "Postítulo",
+        9: "Magister",
+        10: "Doctorado"
+    },
+    2: {
+        1: "Diurno",
+        2: "Vespertino",
+        3: "Semipresencial",
+        4: "A distancia",
+        5: "Otro"
+    },
+    3: {
+        1: "Presencial",
+        2: "Semipresencial", 
+        3: "No presencial"
+    }
+}
+
+# Aplicar mapeos al DataFrame filtrado
+df_filtered['Categoría'] = df_filtered['categoria'].map(categoria_map)
+df_filtered['Desagregación'] = df_filtered.apply(
+    lambda row: desagregacion_map.get(row['categoria'], {}).get(row['desagregacion'], ""), 
+    axis=1
+)
+
+# Sección DIMENSIÓN 1
+st.divider()
+st.header("DIMENSIÓN 1: DOCENCIA Y RESULTADOS DEL PROCESO DE FORMACIÓN")
+st.subheader("Criterio 1: Oferta formativa")
+st.write("**Indicador 01: Número de programas vigentes.**")
+
+# Crear tabla para mostrar
+table_data = []
+for _, row in df_filtered.iterrows():
+    table_data.append({
+        'Categoría': row['Categoría'],
+        'Desagregación': row['Desagregación'],
+        '2021': row['vacantes2021'],
+        '2022': row['vacantes2022'], 
+        '2023': row['vacantes2023'],
+        '2024': row['vacantes2024'],
+        '2025': row['vacantes2025']
+    })
+
+# Mostrar tabla
+if table_data:
+    df_display = pd.DataFrame(table_data)
+    st.dataframe(df_display, use_container_width=True, hide_index=True)
+else:
+    st.warning("No se encontraron datos para la institución seleccionada.")
+
+# Fuente
+st.caption("Fuente: Elaboración propia en base a datos SIES (Mineduc)")
