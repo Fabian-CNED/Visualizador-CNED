@@ -165,7 +165,7 @@ def format_number(value):
         return "-"
 
 # Aplicar formato a las columnas de años
-for year_col in ['vacantes2021', 'vacantes2022', 'vacantes2023', 'vacantes2024', 'vacantes2025']:
+for year_col in ['programas2021', 'programas2022', 'programas2023', 'programas2024', 'programas2025']:
     df_filtered[year_col] = df_filtered[year_col].apply(format_number)
 
 # Sección DIMENSIÓN 1
@@ -180,11 +180,11 @@ for _, row in df_filtered.iterrows():
     table_data.append({
         'Categoría': row['Categoría'],
         'Desagregación': row['Desagregación'],
-        '2021': row['vacantes2021'],
-        '2022': row['vacantes2022'], 
-        '2023': row['vacantes2023'],
-        '2024': row['vacantes2024'],
-        '2025': row['vacantes2025']
+        '2021': row['programas2021'],
+        '2022': row['programas2022'], 
+        '2023': row['programas2023'],
+        '2024': row['programas2024'],
+        '2025': row['programas2025']
     })
 
 # Mostrar tabla
