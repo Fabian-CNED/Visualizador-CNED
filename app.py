@@ -84,11 +84,11 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.text_input("Institución", value=selected_data['nomb_inst'])
-    st.text_input("Tipo de Institución", value=selected_data['tipo_inst_3'], disabled=True)
+    st.text_input("Tipo de Institución", value=selected_data['tipo_inst_3'])
 
 with col2:
-    st.text_input("Estado", value=selected_data['estado'], disabled=True)
-    st.text_input("Rector/a", value=selected_data['rector_inst'], disabled=True)
+    st.text_input("Estado", value=selected_data['estado'])
+    st.text_input("Rector/a", value=selected_data['rector_inst'])
 
 # Mostrar código institucional (oculto al usuario pero disponible para uso interno)
 st.session_state['selected_institution_code'] = cod_inst
