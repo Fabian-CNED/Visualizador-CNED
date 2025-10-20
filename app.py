@@ -9,15 +9,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Ocultar referencias a pie de página
-hide_footer_style = """
-    <style>
-    footer {visibility: hidden;}
-    </style>
-"""
-st.markdown(hide_footer_style, unsafe_allow_html=True)
-
-# Ocultar elementos de la barra lateral usando CSS
+# Ocultar elementos de la barra lateral y footer usando CSS
 hide_sidebar_style = """
     <style>
         /* Ocultar completamente la barra lateral */
@@ -30,6 +22,41 @@ hide_sidebar_style = """
             max-width: 100%;
             padding-left: 1rem;
             padding-right: 1rem;
+        }
+        
+        /* Ocultar el footer de Streamlit */
+        footer {
+            visibility: hidden;
+        }
+        
+        /* Ocultar el menú hamburguesa en móviles */
+        .st-emotion-cache-1dp5vir {
+            display: none;
+        }
+        
+        /* Ocultar elementos específicos del footer de Streamlit */
+        .stAppFooter {
+            display: none;
+        }
+        
+        /* Ocultar el badge "Made with Streamlit" */
+        .stAppFooter footer {
+            display: none;
+        }
+        
+        /* Ocultar cualquier elemento con la clase que contenga 'footer' */
+        [data-testid="stFooter"] {
+            display: none;
+        }
+        
+        /* Ocultar elementos del footer en la vista principal */
+        #MainMenu {
+            visibility: hidden;
+        }
+        
+        /* Asegurar que no haya espacio reservado para el footer */
+        .stApp {
+            bottom: 0;
         }
     </style>
 """
