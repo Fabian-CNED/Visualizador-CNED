@@ -83,7 +83,7 @@ st.header("CARACTERIZACIÓN INSTITUCIONAL")
 col1, col2 = st.columns(2)
 
 with col1:
-    st.text_input("Institución", value=selected_data['nomb_inst'], disabled=True)
+    st.text_input("Institución", value=selected_data['nomb_inst'])
     st.text_input("Tipo de Institución", value=selected_data['tipo_inst_3'], disabled=True)
 
 with col2:
