@@ -232,3 +232,32 @@ if df_tab3 is not None:
 
 # Fuente
 st.caption("Fuente: Elaboración propia en base a datos SIES (Mineduc)")
+
+# Indicador 04: Matrícula primer año
+st.write("**Indicador 04: Matrícula primer año.**")
+
+# Cargar y mostrar datos para Indicador 03
+df_tab4 = procesar_tabla("tab4.csv", cod_inst)
+if df_tab4 is not None:
+    # Crear tabla para mostrar
+    table_data_04 = []
+    for _, row in df_tab4.iterrows():
+        table_data_04.append({
+            'Categoría': row['Categoría'],
+            'Desagregación': row['Desagregación'],
+            '2021': row['programas2021'],
+            '2022': row['programas2022'], 
+            '2023': row['programas2023'],
+            '2024': row['programas2024'],
+            '2025': row['programas2025']
+        })
+
+    # Mostrar tabla
+    if table_data_04:
+        df_display_04 = pd.DataFrame(table_data_04)
+        st.dataframe(df_display_04, use_container_width=True, hide_index=True)
+    else:
+        st.warning("No se encontraron datos para la institución seleccionada en el Indicador 04.")
+
+# Fuente
+st.caption("Fuente: Elaboración propia en base a datos SIES (Mineduc)")
