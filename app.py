@@ -204,6 +204,7 @@ if df_tab1 is not None:
         st.warning("No se encontraron datos para la institución seleccionada en el Indicador 01.")
 
 # Indicador 03: Matrícula total
+st.subheader("Criterio 3: Acceso y progresión de los estudiantes")
 st.write("**Indicador 03: Matrícula total.**")
 
 # Cargar y mostrar datos para Indicador 03
