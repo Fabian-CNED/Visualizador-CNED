@@ -93,23 +93,15 @@ with col2:
 # Mostrar código institucional (oculto al usuario pero disponible para uso interno)
 st.session_state['selected_institution_code'] = cod_inst
 
-# Cargar datos para la DIMENSIÓN 1
-try:
-    df_tab1 = pd.read_csv("tab1.csv", sep=';', encoding='utf-8')
-except FileNotFoundError:
-    st.error("No se encontró el archivo 'tab1.csv'. Asegúrate de que esté en el mismo directorio.")
-    st.stop()
-except Exception as e:
-    st.error(f"Error al cargar el archivo tab1.csv: {e}")
-    # Intentar con encoding alternativo
+# Función para formatear números con separador de miles y manejar valores nulos
+def format_number(value):
+    if pd.isna(value) or value == "" or value is None:
+        return "-"
     try:
-        df_tab1 = pd.read_csv("tab1.csv", sep=';', encoding='latin-1')
-    except Exception as e2:
-        st.error(f"Error también con encoding alternativo: {e2}")
-        st.stop()
-
-# Filtrar datos por institución seleccionada
-df_filtered = df_tab1[df_tab1['cod_inst'] == cod_inst]
+        # Convertir a entero y formatear con separador de miles
+        return f"{int(value):,}".replace(",", ".")
+    except (ValueError, TypeError):
+        return "-"
 
 # Mapeo de categorías y desagregaciones
 categoria_map = {
@@ -147,52 +139,95 @@ desagregacion_map = {
     }
 }
 
-# Aplicar mapeos al DataFrame filtrado
-df_filtered['Categoría'] = df_filtered['categoria'].map(categoria_map)
-df_filtered['Desagregación'] = df_filtered.apply(
-    lambda row: desagregacion_map.get(row['categoria'], {}).get(row['desagregacion'], ""), 
-    axis=1
-)
-
-# Función para formatear números con separador de miles y manejar valores nulos
-def format_number(value):
-    if pd.isna(value) or value == "" or value is None:
-        return "-"
+# Función para cargar y procesar datos de tablas
+def procesar_tabla(nombre_archivo, cod_inst):
     try:
-        # Convertir a entero y formatear con separador de miles
-        return f"{int(value):,}".replace(",", ".")
-    except (ValueError, TypeError):
-        return "-"
-
-# Aplicar formato a las columnas de años
-for year_col in ['programas2021', 'programas2022', 'programas2023', 'programas2024', 'programas2025']:
-    df_filtered[year_col] = df_filtered[year_col].apply(format_number)
+        df_tab = pd.read_csv(nombre_archivo, sep=';', encoding='utf-8')
+    except FileNotFoundError:
+        st.error(f"No se encontró el archivo '{nombre_archivo}'. Asegúrate de que esté en el mismo directorio.")
+        return None
+    except Exception as e:
+        st.error(f"Error al cargar el archivo {nombre_archivo}: {e}")
+        # Intentar con encoding alternativo
+        try:
+            df_tab = pd.read_csv(nombre_archivo, sep=';', encoding='latin-1')
+        except Exception as e2:
+            st.error(f"Error también con encoding alternativo: {e2}")
+            return None
+    
+    # Filtrar datos por institución seleccionada
+    df_filtered = df_tab[df_tab['cod_inst'] == cod_inst]
+    
+    # Aplicar mapeos al DataFrame filtrado
+    df_filtered['Categoría'] = df_filtered['categoria'].map(categoria_map)
+    df_filtered['Desagregación'] = df_filtered.apply(
+        lambda row: desagregacion_map.get(row['categoria'], {}).get(row['desagregacion'], ""), 
+        axis=1
+    )
+    
+    # Aplicar formato a las columnas de años
+    year_columns = [col for col in df_filtered.columns if col.startswith('vacantes')]
+    for year_col in year_columns:
+        df_filtered[year_col] = df_filtered[year_col].apply(format_number)
+    
+    return df_filtered
 
 # Sección DIMENSIÓN 1
 st.divider()
 st.header("DIMENSIÓN 1: DOCENCIA Y RESULTADOS DEL PROCESO DE FORMACIÓN")
+
+# Indicador 01: Número de programas vigentes
 st.subheader("Criterio 1: Oferta formativa")
 st.write("**Indicador 01: Número de programas vigentes.**")
 
-# Crear tabla para mostrar
-table_data = []
-for _, row in df_filtered.iterrows():
-    table_data.append({
-        'Categoría': row['Categoría'],
-        'Desagregación': row['Desagregación'],
-        '2021': row['programas2021'],
-        '2022': row['programas2022'], 
-        '2023': row['programas2023'],
-        '2024': row['programas2024'],
-        '2025': row['programas2025']
-    })
+# Cargar y mostrar datos para Indicador 01
+df_tab1 = procesar_tabla("tab1.csv", cod_inst)
+if df_tab1 is not None:
+    # Crear tabla para mostrar
+    table_data_01 = []
+    for _, row in df_tab1.iterrows():
+        table_data_01.append({
+            'Categoría': row['Categoría'],
+            'Desagregación': row['Desagregación'],
+            '2021': row['vacantes2021'],
+            '2022': row['vacantes2022'], 
+            '2023': row['vacantes2023'],
+            '2024': row['vacantes2024'],
+            '2025': row['vacantes2025']
+        })
 
-# Mostrar tabla
-if table_data:
-    df_display = pd.DataFrame(table_data)
-    st.dataframe(df_display, use_container_width=True, hide_index=True)
-else:
-    st.warning("No se encontraron datos para la institución seleccionada.")
+    # Mostrar tabla
+    if table_data_01:
+        df_display_01 = pd.DataFrame(table_data_01)
+        st.dataframe(df_display_01, use_container_width=True, hide_index=True)
+    else:
+        st.warning("No se encontraron datos para la institución seleccionada en el Indicador 01.")
+
+# Indicador 03: Matrícula total
+st.write("**Indicador 03: Matrícula total.**")
+
+# Cargar y mostrar datos para Indicador 03
+df_tab3 = procesar_tabla("tab3.csv", cod_inst)
+if df_tab3 is not None:
+    # Crear tabla para mostrar
+    table_data_03 = []
+    for _, row in df_tab3.iterrows():
+        table_data_03.append({
+            'Categoría': row['Categoría'],
+            'Desagregación': row['Desagregación'],
+            '2021': row['vacantes2021'],
+            '2022': row['vacantes2022'], 
+            '2023': row['vacantes2023'],
+            '2024': row['vacantes2024'],
+            '2025': row['vacantes2025']
+        })
+
+    # Mostrar tabla
+    if table_data_03:
+        df_display_03 = pd.DataFrame(table_data_03)
+        st.dataframe(df_display_03, use_container_width=True, hide_index=True)
+    else:
+        st.warning("No se encontraron datos para la institución seleccionada en el Indicador 03.")
 
 # Fuente
 st.caption("Fuente: Elaboración propia en base a datos SIES (Mineduc)")
