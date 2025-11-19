@@ -66,7 +66,7 @@ st.markdown(hide_sidebar_style, unsafe_allow_html=True)
 st.title("VISUALIZADOR DE DATOS INSTITUCIONALES")
 st.caption("Última actualización: 20 de octubre de 2025")
 
-# Cargar datos desde el archivo CSV con separador ;
+# Cargar datos desde el archivo CSV
 try:
     df = pd.read_csv("tab0.csv", sep=';', encoding='utf-8')
     
